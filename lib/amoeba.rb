@@ -519,27 +519,27 @@ module Amoeba
     def amo_preprocess_parent_copy
       # nullify any fields the user has configured
       amoeba_conf.null_fields.each do |n|
-        @result[n] = nil
+        @result.send("#{n}=" , nil)
       end
 
       # prepend any extra strings to indicate uniqueness of the new record(s)
       amoeba_conf.coercions.each do |field,coercion|
-        @result[field] = "#{coercion}"
+        @result.send("#{field}=" , "#{coercion}")
       end
 
       # prepend any extra strings to indicate uniqueness of the new record(s)
       amoeba_conf.prefixes.each do |field,prefix|
-        @result[field] = "#{prefix}#{@result[field]}"
+        @result.send( "#{field}=", "#{prefix}#{@result[field]}")
       end
 
       # postpend any extra strings to indicate uniqueness of the new record(s)
       amoeba_conf.suffixes.each do |field,suffix|
-        @result[field] = "#{@result[field]}#{suffix}"
+        @result.send("#{field}=" , "#{@result[field]}#{suffix}")
       end
 
       # regex andy fields that need changing
       amoeba_conf.regexes.each do |field,action|
-        @result[field].gsub!(action[:replace], action[:with])
+        @result.send("#{field}=" , @result[field].gsub(action[:replace], action[:with]))
       end
 
       # prepend any extra strings to indicate uniqueness of the new record(s)
